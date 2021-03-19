@@ -1,17 +1,17 @@
 from flask import Flask
-from flask_restful import Api
-from flask_cors import CORS
+# from flask_restful import Api
+# from flask_cors import CORS
 # from config import Config
 
-from flask_restful import Resource, abort
+def create_app(config_name):
+    """
+    Creates the application object
+    """
+    app = Flask(__name__)
+    app.config.from_pyfile("config.py")
+    from mongo import mongodb
+    mongodb.init_app(app)
 
-app = Flask(__name__)
-CORS(app, resources={r"*": {"origins": "*"}})
-api = Api(app)
-
-class testResource(Resource):
-
-    def get(self):
-        return {"Hello": "World"}
-
-api.add_resource(testResource, '/')
+    from scheduler import scheduler
+    app.register_blueprint(scheduler, url_prefix='/')
+    return app
