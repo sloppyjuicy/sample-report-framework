@@ -24,11 +24,13 @@ def send_report(email_id):
     # app = current_app._get_current_object()
     with app.app_context():
         msg = Message(
-                subject="Hello",
+                subject="Report Generated",
                 sender=current_app.config["MAIL_USERNAME"],
                 recipients=[email_id],
-                body="This email has been programmatically generated",
+                body="As per your request, the report has been generated and is attached.",
             )
+        with open("files/report.pdf", "rb") as fh:
+            msg.attach("files/report.pdf","application/pdf",fh.read())
 
         mail.send(msg)
     print("Mail has been sent!")

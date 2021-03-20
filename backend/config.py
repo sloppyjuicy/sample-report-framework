@@ -12,5 +12,5 @@ MONGO_URI = "mongodb://127.0.0.1:27017/sample-report-framework"
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 465
 MAIL_USE_SSL = True
-MAIL_USERNAME = 'nandha95@gmail.com'
-MAIL_PASSWORD = 'wxfhgkvnuebtljat'
+MAIL_USERNAME =
+MAIL_PASSWORD =
