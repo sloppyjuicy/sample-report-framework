@@ -24,3 +24,5 @@ yarn-error.log*
 
 .vscode/
 backend/__pycache__/
+scheduleapp/__pycache__/
+mongo/__pycache__/

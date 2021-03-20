@@ -1,10 +1,13 @@
 import { useState } from 'react'
+import { utcToZonedTime } from 'date-fns-tz'
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const AddSchedule = ({ onAdd }) => {
     
     const [ name, setName ] = useState('');
-    const [ time, setTime ] = useState('');
+    const [ time, setTime ] = useState(utcToZonedTime(new Date(), "Asia/Kolkata"));
     const [ recipient_name, setRecipientName ] = useState('');
     const [ recipient_email, setRecipientEmail ] = useState('');
 
@@ -23,7 +26,6 @@ const AddSchedule = ({ onAdd }) => {
             alert("Please add an email id");
             return;
         }
-        console.log(Date.now());
         onAdd({ name, time, recipient_name, recipient_email })
 
         setName('')
@@ -42,8 +44,7 @@ const AddSchedule = ({ onAdd }) => {
             </div>
             <div className='form-control'>
                 <label>Scheduled Time</label>
-                <input type="text" placeholder="Select time for this report." 
-                value={time} onChange={(e) => setTime(e.target.value)}/>
+                <DatePicker showTimeSelect dateFormat="d/MM/yyyy, h:mmaa" selected={time} onChange={time => setTime(time)} />
             </div>
             <div className='form-control'>
                 <label>Recipient </label>

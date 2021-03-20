@@ -1,7 +1,6 @@
 import Schedule from './Schedule'
 
 const Schedules = ({ schedules, onDelete}) => {
-    console.log(schedules)
     return (
         <>
             {schedules.map((schedule) => (

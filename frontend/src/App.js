@@ -13,7 +13,7 @@ function App() {
   useEffect(() => {
     const getSchedules = async () => {
       const schedulesFromServer = await fetchSchedules()
-      console.log(schedulesFromServer)
+      // console.log((new Date(schedulesFromServer[0]["time"])).toISOString())
       setSchedules(schedulesFromServer)
     }
 
@@ -39,7 +39,7 @@ function App() {
 
     const data = await res.json()
     schedule['id'] = data['id']
-    setSchedules([...schedules, schedule])
+    setSchedules([...schedules, data])
   }
 
   //Delete Task

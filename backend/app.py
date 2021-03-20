@@ -10,8 +10,10 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_pyfile("config.py")
     from mongo import mongodb
+    from scheduleapp.scheduler import scheduler
     mongodb.init_app(app)
-
-    from scheduler import scheduler
-    app.register_blueprint(scheduler, url_prefix='/')
+    # scheduler.init_app(app)
+    scheduler.start()
+    from scheduleapp import scheduleapp
+    app.register_blueprint(scheduleapp, url_prefix='/')
     return app
