@@ -7,13 +7,14 @@ import logging
 client = MongoClient("mongodb://127.0.0.1:27017/sample-report-framework")
 
 jobstores = {
-    'mongo': MongoDBJobStore(
+    'default': MongoDBJobStore(
         database="sample-report-framework",
         collection="jobs",
         client=client
     )
 }
-scheduler = BackgroundScheduler(jobstores=jobstores)
+scheduler = BackgroundScheduler(jobstores=jobstores, daemon=True)
+scheduler.start()
 
 logging.basicConfig()
 logging.getLogger('apscheduler').setLevel(logging.DEBUG)

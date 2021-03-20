@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 .vscode/
+backend/config.py
 backend/__pycache__/
 scheduleapp/__pycache__/
 mongo/__pycache__/

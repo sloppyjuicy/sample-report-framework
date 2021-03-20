@@ -38,7 +38,7 @@ const AddSchedule = ({ onAdd }) => {
     return (
         <form className="add-form" onSubmit={onSubmit}>
             <div className='form-control'>
-                <label>Recipient </label>
+                <label>Report Name </label>
                 <input type="text" placeholder="Add Report Name" 
                 value={name} onChange={(e) => setName(e.target.value)}/>
             </div>

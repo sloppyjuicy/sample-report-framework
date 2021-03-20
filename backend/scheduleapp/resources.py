@@ -1,8 +1,12 @@
 from datetime import datetime, timezone
 from dateutil import parser, tz
 import pytz 
-from flask import request, jsonify
+from flask import request, jsonify, current_app
+from app import app
+from config import MAIL_USERNAME
 from flask_restful import Resource, abort
+from flask_mail import Message
+from mail import mail
 from mongo import mongodb
 from bson import json_util
 from bson.objectid import ObjectId
@@ -16,16 +20,28 @@ to_zone = tz.tzlocal()
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
+def send_report(email_id):
+    # app = current_app._get_current_object()
+    with app.app_context():
+        msg = Message(
+                subject="Hello",
+                sender=current_app.config["MAIL_USERNAME"],
+                recipients=[email_id],
+                body="This email has been programmatically generated",
+            )
 
-def test_job():
+        mail.send(msg)
+    print("Mail has been sent!")
+
+def send_report_job(email_id, job_id):
+    print(email_id)
     print(datetime.utcnow().replace(tzinfo=to_zone))
-    print("Job has run!")
-
+    send_report(email_id)
+    mongodb.db.schedules.delete_one({'_id': ObjectId(job_id)})
 
 class Schedules(Resource):
 
     def get(self):
-
         schedules = list(mongodb.db.schedules.find())
         # print(json.dumps(records, indent=4, sort_keys=True, default=str))
         for schedule in schedules:
@@ -37,8 +53,6 @@ class Schedules(Resource):
     
     def post(self):
         request_body = request.json
-
-        print(request_body)
         schedule_time = parser.isoparse(request_body['time'])
 
         local_schedule_time = schedule_time.replace(tzinfo=from_zone).astimezone(to_zone)
@@ -48,10 +62,16 @@ class Schedules(Resource):
             "recipient_name": request_body['recipient_name'],
             "recipient_email": request_body['recipient_email']
         })
-        print(schedule.inserted_id)
-        scheduler.add_job(func=test_job, trigger='date', run_date=local_schedule_time)
+        insert_id = str(schedule.inserted_id)
+        scheduler.add_job(
+            func=send_report_job,
+            trigger='date',
+            args=[request_body['recipient_email'], insert_id],
+            run_date=local_schedule_time,
+            id=insert_id
+        )
         return {
-            'id': str(schedule.inserted_id),
+            'id': insert_id,
             "name": request_body['name'],
             "time": datetime.strftime(local_schedule_time, "%d/%m/%Y %H:%M"),
             "recipient_name": request_body['recipient_name'],
